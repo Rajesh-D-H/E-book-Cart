@@ -1,0 +1,376 @@
+import React, { useState } from 'react';
+
+import './index.css';
+
+
+const App = () => {
+
+  const [books, setBooks] = useState([]);
+
+  const [cart, setCart] = useState([]);
+
+  const [bookName, setBookName] = useState('');
+
+  const [bookPrice, setBookPrice] = useState('');
+
+  const [totalBill, setTotalBill] = useState(0);
+
+  const [purchaseSuccess, setPurchaseSuccess] = useState(false);
+
+
+  // Admin: Add a new book
+
+  const handleAddBook = () => {
+
+    if (bookName && bookPrice) {
+
+      const newBook = { name: bookName, price: parseFloat(bookPrice) };
+
+      setBooks([...books, newBook]);
+
+      setBookName('');
+
+      setBookPrice('');
+
+    }
+
+  };
+
+
+  // Customer: Add book to the cart
+
+  const handleAddToCart = (book) => {
+
+    setCart([...cart, book]);
+
+    setTotalBill(totalBill + book.price);
+
+  };
+
+
+  // Handle form validation and checkout
+
+  const handleCheckout = (event) => {
+
+    event.preventDefault();
+
+    if (cart.length === 0) {
+
+      alert('Your cart is empty! Please add some books.');
+
+    } else {
+
+      setPurchaseSuccess(true);
+
+      setTimeout(() => {
+
+        setPurchaseSuccess(false);
+
+        setCart([]);
+
+        setTotalBill(0);
+
+      }, 3000);
+
+    }
+
+  };
+
+
+  return (
+
+    <div className="app-container">
+
+      <h1>Online Book Shopping System</h1>
+
+
+      {/* Admin Panel */}
+
+      <div className="admin-panel">
+
+        <h2>Add New Book</h2>
+
+        <input
+
+          type="text"
+
+          placeholder="Book Name"
+
+          value={bookName}
+
+          onChange={(e) => setBookName(e.target.value)}
+
+        />
+
+        <input
+
+          type="number"
+
+          placeholder="Price"
+
+          value={bookPrice}
+
+          onChange={(e) => setBookPrice(e.target.value)}
+
+        />
+
+        <button onClick={handleAddBook}>Add Book</button>
+
+      </div>
+
+
+      {/* Available Books */}
+
+      <div className="book-list">
+
+        <h2>Available Books</h2>
+
+        <ul>
+
+          {books.map((book, index) => (
+
+            <li key={index}>
+
+              {book.name} - ${book.price.toFixed(2)}
+
+              <button onClick={() => handleAddToCart(book)}>Add to Cart</button>
+
+            </li>
+
+          ))}
+
+        </ul>
+
+      </div>
+
+
+      {/* Shopping Cart */}
+
+      <div className="cart">
+
+        <h2>Your Cart</h2>
+
+        {cart.length === 0 ? (
+
+          <p>No books in your cart.</p>
+
+        ) : (
+
+          <ul>
+
+            {cart.map((book, index) => (
+
+              <li key={index}>
+
+                {book.name} - ${book.price.toFixed(2)}
+
+              </li>
+
+            ))}
+
+          </ul>
+
+        )}
+
+        <p>Total Bill: ${totalBill.toFixed(2)}</p>
+
+
+        {/* Checkout Form */}
+
+        <form onSubmit={handleCheckout}>
+
+          <button type="Submit" className="checkout-button">
+
+            Checkout
+
+          </button>
+
+        </form>
+
+
+        {purchaseSuccess && <div className="success-message">Purchase Successful!</div>}
+
+      </div>
+
+    </div>
+
+  );
+
+};
+
+
+export default App;
+
+
+* {
+
+  margin: 0;
+
+  padding: 0;
+
+  box-sizing: border-box;
+
+}
+
+
+body {
+
+  font-family: Arial, sans-serif;
+
+  background-color: greenyellow;
+
+  color: orange;
+
+  padding: 50px;
+
+}
+
+
+.app-container {
+
+  max-width: 1000px;
+
+  margin: 0 auto;
+
+  background-color: yellow;
+
+  padding: 30px;
+
+  border-radius: 8px;
+
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+}
+
+
+h1 {
+
+  text-align: center;
+
+  color: red;
+
+  font-size: 3.5rem;
+
+}
+
+
+h2 {
+
+  margin-bottom: 20px;
+
+  font-size: 1.8rem;
+
+  color: #4a90e2;
+
+}
+
+
+input {
+
+  padding: 10px;
+
+  margin: 10px 0;
+
+  width: 250px;
+
+  border: 1px solid #ccc;
+
+  border-radius: 4px;
+
+}
+
+
+button {
+
+  padding: 10px 20px;
+
+  border: none;
+
+  background-color: pink;
+
+  color: white;
+
+  font-size: 1rem;
+
+  cursor: pointer;
+
+  border-radius: 4px;
+
+  transition: background-color 0.3s ease;
+
+}
+
+
+button:hover {
+
+  background-color: whitesmoke;
+
+}
+
+
+.admin-panel,
+
+.book-list,
+
+.cart {
+
+  margin-bottom: 30px;
+
+}
+
+
+ul {
+
+  list-style: none;
+
+}
+
+
+.book-list li {
+
+  margin-bottom: 10px;
+
+}
+
+
+.cart p {
+
+  font-size: 1.2rem;
+
+  margin: 10px 0;
+
+}
+
+
+.checkout-button {
+
+  background-color:burlywood;
+
+}
+
+
+.checkout-button:hover {
+
+  background-color: brown;
+
+}
+
+
+.success-message {
+
+  background-color: #d4edda;
+
+  color:red;
+
+  padding: 20px;
+
+  margin-top: 25px;
+
+  border: 1px solid blanchedalmond;
+
+  border-radius: 10px;
+
+  text-align: center;
+
+}
+
